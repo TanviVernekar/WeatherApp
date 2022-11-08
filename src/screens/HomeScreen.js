@@ -7,11 +7,16 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import background from '../assets/images/background.png';
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
+    const handlepress=()=>{
+         navigation.openDrawer()
+    }
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -22,10 +27,12 @@ const HomeScreen = () => {
           <ScrollView>
             <View style={styles.mainview}>
               <View style={styles.topview}>
+                <Pressable onPress={handlepress}>
                 <Image
                   source={require('../assets/images/menuIcon.png')}
                   style={styles.image}
                 />
+                </Pressable>
                 <Image
                   source={require('../assets/images/logo2.png')}
                   style={styles.logo}
