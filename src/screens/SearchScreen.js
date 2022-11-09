@@ -11,11 +11,12 @@ import {
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 
-const SearchScreen = ({navigation}) => {
+
+const SearchScreen = ({setClicked,clicked}) => {
   const handleBack = () => {
-    navigation.goBack();
+    // navigation.goBack();
+    setClicked(!clicked)
   };
 
   const [text, setText] = useState(null);

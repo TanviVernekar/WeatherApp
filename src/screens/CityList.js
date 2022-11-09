@@ -51,7 +51,8 @@ import { useSelector } from "react-redux";
 // ]
 const CityList=()=>{
 
-    const cities= useSelector(state=>state.favourite.value)
+    // const cities= useSelector(state=>state.favourite.value)
+    const cities=useSelector(state=>state.favourite.list)
     return(
         <View style={styles.container}>
             <FlatList

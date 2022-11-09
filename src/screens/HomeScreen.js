@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,18 +11,54 @@ import {
   Pressable,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
 
 import background from '../assets/images/background.png';
+import {getPosts} from '../redux/WeatherSlice';
+
+import moment from 'moment';
+import NoFav from '../components/NoFav';
+import SearchScreen from '../screens/SearchScreen'
 const HomeScreen = ({navigation}) => {
-    const handlepress=()=>{
-         navigation.openDrawer()
-    }
-    const handleSubmit=()=>{
-      return navigation.navigate('SearchScreen')
-    }
+  const dispatch = useDispatch();
+
+  const list = useSelector(state => state.favourite.list);
+  console.log(list);
+
+  const handlepress = () => {
+    navigation.openDrawer();
+  };
+ 
+
+  const [date, setDate] = useState('');
+  const currentDateTime = () => {
+    const dateTimeMoment = moment()
+      .utcOffset('+05:30')
+      .format('ddd, DD MMM YY     hh:mm a')
+      .toUpperCase();
+    setDate(dateTimeMoment);
+  };
+
+  useEffect(() => {
+    currentDateTime();
+  }, []);
+
+  const [celsius, setCelsius] = useState(list.current.temp_c);
+  const handleCelsius = () => {
+    setCelsius(list.current.temp_c);
+  };
+  const handleFahrenheit = () => {
+    setCelsius(list.current.temp_f);
+  };
+
+  const[clicked,setClicked]=useState(false)
+
   return (
-    <View style={styles.container}>
-      <ImageBackground
+    <>
+    {!clicked?
+      (
+        <View style={styles.container}>
+        <ImageBackground
         source={background}
         resizeMode="cover"
         style={styles.background}>
@@ -31,50 +67,79 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.mainview}>
               <View style={styles.topview}>
                 <Pressable onPress={handlepress}>
-                <Image
-                  source={require('../assets/images/menuIcon.png')}
-                  style={styles.image}
-                />
+                  <Image
+                    source={require('../assets/images/menuIcon.png')}
+                    style={styles.image}
+                  />
                 </Pressable>
                 <Image
                   source={require('../assets/images/logo2.png')}
                   style={styles.logo}
                 />
               </View>
-              <TouchableOpacity onPress={handleSubmit}>
-
-              <View>
-                <Image
-                  source={require('../assets/images/searchIcon.png')}
-                  style={styles.search}
-                />
-              </View>
+              <TouchableOpacity onPress={()=>setClicked(!clicked)}>
+                <View>
+                  <Image
+                    source={require('../assets/images/searchIcon.png')}
+                    style={styles.search}
+                  />
+                </View>
               </TouchableOpacity>
             </View>
             <View style={styles.middleview}>
-              <Text style={styles.datetime}>WED, 28 NOV 2018 11:35 AM</Text>
-              <Text style={styles.place}>Udupi, Karnataka</Text>
+              <Text style={styles.datetime}>{date}</Text>
+              <Text style={styles.place}>
+                {list.location.name},{list.location.region}
+              </Text>
               <View style={styles.favIconview}>
-                <Image
-                  source={require('../assets/images/favouriteIcon.png')}
-                  style={styles.favouriteIcon}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(getPosts());
+                  }}>
+                  <Image
+                    source={require('../assets/images/favouriteIcon.png')}
+                    style={styles.favouriteIcon}
+                  />
+                </TouchableOpacity>
                 <Text style={styles.addtofav}> Add to favourite</Text>
               </View>
               <View style={styles.sunview}>
-
-              <Image
-                source={require('../assets/images/sunIcon.png')}
-                style={styles.sunIcon}
-              />
-              <View style={styles.degree}>
-                <Text style={styles.digit}>31</Text>
-                <View style={styles.unit}>
-                <Text style={styles.unitc}>°C</Text>
-                <Text style={styles.unitf}>°F</Text>
-              </View>
-                </View>
-              <Text style={styles.text}>Mostly Sunny</Text>
+                <Image
+                  source={require('../assets/images/sunIcon.png')}
+                  style={styles.sunIcon}
+                />
+                <View style={styles.degree}>
+                  <Text style={styles.digit}>{celsius}</Text>
+                  <View style={styles.unit}>
+                    {celsius ==  list.current.temp_c ? (
+                      <>
+                        <TouchableOpacity onPress={handleCelsius}>
+                          <Text style={styles.unitc}>°C</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleFahrenheit}>
+                          <Text style={styles.unitf}>°F</Text>
+                        </TouchableOpacity>
+                     {/* </View> */}
+                     </>
+                    ) : (
+                     <>
+                      {/* <Text style={styles.digit}>{celsius}</Text>
+                  <View style={styles.unit}> */}
+                        <TouchableOpacity onPress={handleCelsius}>
+                          <Text style={styles.unitf}>°C</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleFahrenheit}>
+                          <Text style={styles.unitc}>°F</Text>
+                        </TouchableOpacity>
+                        {/* </View> */}
+                        </>
+                  
+                        )}
+                        </View>
+                      </View>
+                <Text style={styles.text}>
+                  Mostly {list.current.condition.text}
+                </Text>
               </View>
             </View>
           </ScrollView>
@@ -82,44 +147,50 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.bottomline} />
             <ScrollView horizontal>
               <View style={styles.bottom}>
-              <View style={styles.tempone}>
-                <Image
-                  source={require('../assets/images/temperatureIcon.png')}
-                  style={styles.temperature}
-                />
-                <View style={styles.minmaxview}>
-                  <Text style={styles.minmax}>Min - Max</Text>
-                  <Text style={styles.celsius}>22°-34°</Text>
+                <View style={styles.tempone}>
+                  <Image
+                    source={require('../assets/images/temperatureIcon.png')}
+                    style={styles.temperature}
+                  />
+                  <View style={styles.minmaxview}>
+                    <Text style={styles.minmax}>Min - Max</Text>
+                    <Text style={styles.celsius}>22°-34°</Text>
+                  </View>
                 </View>
-              </View>
 
-              <View style={styles.temptwo}>
-                <Image
-                  source={require('../assets/images/precipitationIcon.png')}
-                  style={styles.precipitationIcon}
-                />
-                <View style={styles.minmaxview}>
-                  <Text style={styles.precipitation}>Precipitation</Text>
-                  <Text style={styles.percentage}>0%</Text>
+                <View style={styles.temptwo}>
+                  <Image
+                    source={require('../assets/images/precipitationIcon.png')}
+                    style={styles.precipitationIcon}
+                  />
+                  <View style={styles.minmaxview}>
+                    <Text style={styles.precipitation}>Precipitation</Text>
+                    <Text style={styles.percentage}>0%</Text>
+                  </View>
                 </View>
-              </View>
 
-              <View style={styles.tempone}>
-                <Image
-                  source={require('../assets/images/humidityIcon.png')}
-                  style={styles.humidityIcon}
-                />
-                <View style={styles.minmaxview}>
-                  <Text style={styles.humidity}>Humidity</Text>
-                  <Text style={styles.percentage}>47%</Text>
+                <View style={styles.tempone}>
+                  <Image
+                    source={require('../assets/images/humidityIcon.png')}
+                    style={styles.humidityIcon}
+                  />
+                  <View style={styles.minmaxview}>
+                    <Text style={styles.humidity}>Humidity</Text>
+                    <Text style={styles.percentage}>47°C</Text>
+                  </View>
                 </View>
-              </View>
               </View>
             </ScrollView>
           </View>
         </SafeAreaView>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+        </View>
+      ):
+      (
+        <SearchScreen setClicked={setClicked} clicked={clicked}/>
+      )
+      }
+      </>
   );
 };
 export default HomeScreen;
@@ -202,68 +273,66 @@ const styles = StyleSheet.create({
     height: 67,
     width: 64,
   },
-  sunview:{
-    height:175,
-    width:119,
+  sunview: {
+    height: 175,
+    width: 119,
     // borderWidth:1,
-    alignItems:"center",
-    justifyContent:"space-evenly",
-    marginTop:95
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginTop: 95,
   },
-  digit:{
-    height:61,
-    width:60,
-    fontSize:52,
-    fontWeight:'500',
-    letterSpacing:0,
-    lineHeight:61,
-    color:"#FFFFFF"
+  digit: {
+    height: 61,
+    width: 60,
+    fontSize: 52,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 61,
+    color: '#FFFFFF',
   },
-  unit:{
-    height:30,
-    width:55,
-    flexDirection:"row",
-    marginTop:20,
-    borderRadius:5,
-//    alignItems:"center",
-   justifyContent:"center",
-   
+  unit: {
+    height: 30,
+    width: 55,
+    flexDirection: 'row',
+    marginTop: 20,
+    borderRadius: 5,
+    //    alignItems:"center",
+    justifyContent: 'center',
+    marginLeft:10
   },
-  unitc:{
-    height:30,
-    width:28,
-    backgroundColor:"#FFFFFF",
-    borderColor:"#FFFFFF",
-    borderRadius:2,
-    borderWidth:1,
-    color:'#E32843',
-    alignSelf:"center",
-    padding:5
-  
+  unitc: {
+    height: 30,
+    width: 28,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+    borderRadius: 2,
+    borderWidth: 1,
+    color: '#E32843',
+    alignSelf: 'center',
+    padding: 5,
   },
-  unitf:{
-    height:30,
-    width:28,
-    borderColor:"#FFFFFF",
-    borderRadius:2,
-    borderWidth:1,
-    color:'#FFFFFF',
-    padding:5,
-  
+  unitf: {
+    height: 30,
+    width: 28,
+    borderColor: '#FFFFFF',
+    borderRadius: 2,
+    borderWidth: 1,
+    color: '#FFFFFF',
+    padding: 5,
   },
-  text:{
-    height:21,
-    width:108,
-    color:"#FFFFFF",
-    fontSize:18,
-    letterSpacing:0,
-    lineHeight:21,
-    textAlign:"center"
+  text: {
+    height: 21,
+    width: 108,
+    color: '#FFFFFF',
+    fontSize: 18,
+    letterSpacing: 0,
+    lineHeight: 21,
+    textAlign: 'center',
   },
   degree: {
     flexDirection: 'row',
-    height:61,
-    width:119
+    height: 61,
+    width: 119,
   },
   bottomline: {
     height: 1,
@@ -282,94 +351,93 @@ const styles = StyleSheet.create({
     // marginLeft:40
     borderColor: 'white',
   },
- 
+
   temperature: {
     height: 26,
     width: 13,
-    marginLeft:5
+    marginLeft: 5,
   },
   tempone: {
     flexDirection: 'row',
     height: 41,
     width: 94,
-    margin:18,
-    marginVertical:25
+    margin: 18,
+    marginVertical: 25,
   },
   temptwo: {
     flexDirection: 'row',
     height: 41,
     width: 113,
-    margin:18,
-    marginVertical:25
+    margin: 18,
+    marginVertical: 25,
   },
   tempthree: {
     flexDirection: 'row',
     height: 40,
     width: 83,
-    margin:18,
-    marginVertical:25
+    margin: 18,
+    marginVertical: 25,
   },
-  minmaxview:{
-    marginLeft:15,
+  minmaxview: {
+    marginLeft: 15,
   },
-  minmax:{
-    height:15,
-    color:"white",
-    fontSize:13,
-    lineHeight:15,
-    letterSpacing:0,
-    marginBottom:3
+  minmax: {
+    height: 15,
+    color: 'white',
+    fontSize: 13,
+    lineHeight: 15,
+    letterSpacing: 0,
+    marginBottom: 3,
   },
-  celsius:{
+  celsius: {
     height: 21,
-//   width: 56,
-  color: '#FFFFFF',
-  fontsize: 18,
-  fontWeight: '500',
-  letterSpacing: 0,
-  lineHeight: 21,
+    //   width: 56,
+    color: '#FFFFFF',
+    fontsize: 18,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 21,
   },
-  bottom:{
-    flexDirection:"row",
-    justifyContent:"space-between"
+  bottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  precipitationIcon:{
-    height:22,
-    width:24,
-    color:"#FFFFFF",
-    marginTop:2,
-    marginLeft:5,
+  precipitationIcon: {
+    height: 22,
+    width: 24,
+    color: '#FFFFFF',
+    marginTop: 2,
+    marginLeft: 5,
   },
-  precipitation:{
-    height:15,
-    marginBottom:5,
-    color:"white",
-    fontSize:13,
-    letterSpacing:0,
-    lineHeight:15
+  precipitation: {
+    height: 15,
+    marginBottom: 5,
+    color: 'white',
+    fontSize: 13,
+    letterSpacing: 0,
+    lineHeight: 15,
   },
-  percentage:{
-    height:21,
-    color:"#FFFFFF",
-    fontSize:18,
-    fontWeight:"500",
-    letterSpacing:0,
-    lineHeight:21
+  percentage: {
+    height: 21,
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 21,
   },
-  humidityIcon:{
-    height:20,
-    width:15,
-    marginLeft:10,
-    marginTop:2
+  humidityIcon: {
+    height: 20,
+    width: 15,
+    marginLeft: 10,
+    marginTop: 2,
   },
-  humidity:{
-    height:15,
-   
-    color:"#FFFFFF",
-    fontSize:13,
-    letterSpacing:0,
-    lineHeight:15,
-    marginBottom:5
+  humidity: {
+    height: 15,
 
-  }
+    color: '#FFFFFF',
+    fontSize: 13,
+    letterSpacing: 0,
+    lineHeight: 15,
+    marginBottom: 5,
+  },
 });

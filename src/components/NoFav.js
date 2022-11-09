@@ -5,6 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 const NoFav = () => {
   return (
     <SafeAreaView style={styles.imageView}>
+      
       <Image
         source={require('../assets/images/noFav.png')}
         style={styles.image}
