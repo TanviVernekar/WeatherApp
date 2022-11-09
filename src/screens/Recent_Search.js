@@ -1,10 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, Image, Text, ImageBackground} from 'react-native';
+import {View, StyleSheet, Image, Text, ImageBackground,TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import background from '../assets/images/background.png';
 import NoFav from '../components/NoFav';
 import CityList from './CityList';
-const Recent_Search = () => {
+const Recent_Search = ({navigation}) => {
+  const handlePress = () => {
+    navigation.goBack();
+  };
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -14,10 +17,15 @@ const Recent_Search = () => {
         <View style={styles.topbar}>
           <View style={styles.topbar2}>
             <View style={styles.topbar3}>
-              <Image
-                source={require('../assets/images/backIcon.png')}
-                style={styles.backIcon}
-              />
+            <View>
+
+<TouchableOpacity onPress={handlePress}>
+  <Image
+    source={require('../assets/images/backIcon.png')}
+    style={styles.backIcon}
+  />
+</TouchableOpacity>
+</View>
               <Text style={styles.toptext}>Recent Search</Text>
             </View>
             </View>
@@ -32,7 +40,7 @@ const Recent_Search = () => {
 
         {/* <NoFav/> */}
        
-       <CityList/>
+       <CityList name="Clear All"/>
       </ImageBackground>
     </View>
   );

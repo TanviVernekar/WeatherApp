@@ -1,5 +1,6 @@
 // import React from 'react';
 import * as React from 'react';
+import { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,6 +15,8 @@ import background from '../assets/images/background.png';
 import NoFav from '../components/NoFav';
 import CityList from './CityList';
 const Favourite = ({navigation}) => {
+
+  const[isEmpty,setEmpty]=useState(false);
   const handlePress = () => {
     navigation.goBack();
   };
@@ -26,12 +29,15 @@ const Favourite = ({navigation}) => {
         <View style={styles.topbar}>
           <View style={styles.topbar2}>
             <View style={styles.topbar3}>
-              <Pressable onPress={handlePress}>
+              <View>
+
+              <TouchableOpacity onPress={handlePress}>
                 <Image
                   source={require('../assets/images/backIcon.png')}
                   style={styles.backIcon}
                 />
-              </Pressable>
+              </TouchableOpacity>
+              </View>
               <Text style={styles.toptext}>Favourite</Text>
             </View>
           </View>
@@ -42,10 +48,10 @@ const Favourite = ({navigation}) => {
             />
           </View>
         </View>
-
+        {isEmpty?(<NoFav/>):(<CityList name="Remove All" />)}
         {/* <NoFav/> */}
+        {/* <CityList /> */}
 
-        <CityList />
       </ImageBackground>
     </View>
   );
@@ -61,7 +67,7 @@ const styles = StyleSheet.create({
   },
   topbar: {
     height: 56,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -78,6 +84,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginLeft: 20,
+   
   },
   toptext: {
     height: 24,

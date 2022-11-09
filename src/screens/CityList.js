@@ -1,5 +1,5 @@
 import react from "react";
-import { FlatList ,StyleSheet,View,Text,Image} from "react-native";
+import { FlatList ,StyleSheet,View,Text,Image, Pressable, TouchableOpacity} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const cities=[
@@ -47,12 +47,18 @@ const cities=[
     },
 
 ]
-const CityList=()=>{
+const CityList=(props)=>{
     return(
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
              <View style={styles.cityView}>
         <Text style={styles.text1}>6 City added as favourite</Text>
-        <Text  style={[styles.text1,styles.text2]}>Remove All</Text>
+        <View>
+
+        <TouchableOpacity>
+
+        <Text  style={[styles.text1,styles.text2]}>{props.name}</Text>
+        </TouchableOpacity>
+        </View>
        </View>
             <FlatList
             data={cities}
@@ -77,20 +83,22 @@ const CityList=()=>{
                 </View>
             )}
             />
-        </SafeAreaView>
+        </View>
     )
 }
 export default CityList
 
 const styles=StyleSheet.create({
     container:{
-        flex:1
+        flex:1,
+        // borderWidth:1,
+        marginTop:50
     },
     cityView:{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        // borderWidth: 1,
         margin:15,
+        marginBottom:23
        
     },
     text1:{
@@ -104,6 +112,7 @@ const styles=StyleSheet.create({
     },
     text2:{
         fontWeight:"500"
+        
     },
     view:{
         height:80,
@@ -112,7 +121,9 @@ const styles=StyleSheet.create({
         marginHorizontal:10,
         flexDirection:"row",
         justifyContent:"space-between",
-        marginBottom:1
+        marginBottom:1,
+        marginHorizontal:14
+        
         
     },
     cityname:{
