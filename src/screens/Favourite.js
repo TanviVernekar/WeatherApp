@@ -9,17 +9,33 @@ import {
   ImageBackground,
   Pressable,
   TouchableOpacity,
+  Alert
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import background from '../assets/images/background.png';
 import NoFav from '../components/NoFav';
 import CityList from './CityList';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 const Favourite = ({navigation}) => {
 
   const[isEmpty,setEmpty]=useState(false);
   const handlePress = () => {
     navigation.goBack();
   };
+  const createTwoButtonAlert = () =>
+  Alert.alert(
+    "",
+    "Are you sure want to remove all the favourites?",
+    [
+      {
+        text: "No",
+        onPress: () =>  setEmpty(false),
+        style:"cancel"
+        
+      },
+      { text: "Yes", onPress: () => setEmpty(true) }
+    ]
+  );
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -42,15 +58,35 @@ const Favourite = ({navigation}) => {
             </View>
           </View>
           <View>
-            <Image
-              source={require('../assets/images/backIcon.png')}
-              style={styles.searchIcon}
-            />
+            <Icon name="search" size={25} style={styles.searchIcon}/>
           </View>
         </View>
-        {isEmpty?(<NoFav/>):(<CityList name="Remove All" />)}
-        {/* <NoFav/> */}
-        {/* <CityList /> */}
+
+
+        {/* <View style={styles.cityView}>
+        <Text style={styles.text1}>6 City added as favourite</Text>
+        <View>
+        <TouchableOpacity onPress={createTwoButtonAlert}>
+        <Text  style={[styles.text1,styles.text2]}>Remove All</Text>
+        </TouchableOpacity>
+        </View>
+       </View> */}
+
+
+        {isEmpty?(<NoFav/>):(
+        <>
+        <View style={styles.cityView}>
+        <Text style={styles.text1}>6 City added as favourite</Text>
+        <View>
+        <TouchableOpacity onPress={createTwoButtonAlert}>
+        <Text  style={[styles.text1,styles.text2]}>Remove All</Text>
+        </TouchableOpacity>
+        </View>
+       </View>
+       <CityList/>
+        </>
+       )}
+       
 
       </ImageBackground>
     </View>
@@ -102,9 +138,27 @@ const styles = StyleSheet.create({
     width: 24,
     marginRight: 25,
   },
-  cityView: {
+
+  cityView:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderWidth: 1,
-  },
+    margin:15,
+    // 
+    marginTop:65,
+    // borderWidth:1
+   
+},
+text1:{
+    color:"#FFFFFF",
+    height:15,
+    fontSize:13,
+    letterSpacing:0,
+    lineHeight:15,
+    // marginTop:20
+
+},
+text2:{
+    fontWeight:"500"
+    
+},
 });

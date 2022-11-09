@@ -1,5 +1,5 @@
 import react from "react";
-import { FlatList ,StyleSheet,View,Text,Image, Pressable, TouchableOpacity} from "react-native";
+import { FlatList ,StyleSheet,View,Text,Image, Pressable, TouchableOpacity,Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const cities=[
@@ -47,19 +47,9 @@ const cities=[
     },
 
 ]
-const CityList=(props)=>{
+const CityList=()=>{
     return(
         <View style={styles.container}>
-             <View style={styles.cityView}>
-        <Text style={styles.text1}>6 City added as favourite</Text>
-        <View>
-
-        <TouchableOpacity>
-
-        <Text  style={[styles.text1,styles.text2]}>{props.name}</Text>
-        </TouchableOpacity>
-        </View>
-       </View>
             <FlatList
             data={cities}
            renderItem={({item})=>(
@@ -92,28 +82,28 @@ const styles=StyleSheet.create({
     container:{
         flex:1,
         // borderWidth:1,
-        marginTop:50
+        marginTop:10
     },
-    cityView:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        margin:15,
-        marginBottom:23
+    // cityView:{
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     margin:15,
+    //     marginBottom:23
        
-    },
-    text1:{
-        color:"#FFFFFF",
-        height:15,
+    // },
+    // text1:{
+    //     color:"#FFFFFF",
+    //     height:15,
      
-        fontSize:13,
-        letterSpacing:0,
-        lineHeight:15,
+    //     fontSize:13,
+    //     letterSpacing:0,
+    //     lineHeight:15,
 
-    },
-    text2:{
-        fontWeight:"500"
+    // },
+    // text2:{
+    //     fontWeight:"500"
         
-    },
+    // },
     view:{
         height:80,
         // width:330,

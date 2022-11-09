@@ -17,6 +17,9 @@ const HomeScreen = ({navigation}) => {
     const handlepress=()=>{
          navigation.openDrawer()
     }
+    const handleSubmit=()=>{
+      return navigation.navigate('SearchScreen')
+    }
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -38,12 +41,15 @@ const HomeScreen = ({navigation}) => {
                   style={styles.logo}
                 />
               </View>
+              <TouchableOpacity onPress={handleSubmit}>
+
               <View>
                 <Image
                   source={require('../assets/images/searchIcon.png')}
                   style={styles.search}
                 />
               </View>
+              </TouchableOpacity>
             </View>
             <View style={styles.middleview}>
               <Text style={styles.datetime}>WED, 28 NOV 2018 11:35 AM</Text>

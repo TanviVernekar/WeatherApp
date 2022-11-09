@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Image, Text, ImageBackground,TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Image, Text, ImageBackground,TouchableOpacity,Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import background from '../assets/images/background.png';
 import NoFav from '../components/NoFav';
@@ -8,6 +8,23 @@ const Recent_Search = ({navigation}) => {
   const handlePress = () => {
     navigation.goBack();
   };
+
+  const createTwoButtonAlert = () =>
+  Alert.alert(
+    "",
+    "Are you sure want to remove all the favourites?",
+    [
+      {
+        text: "No",
+        onPress: () => console.log("No"),
+      //   style:"No",
+         style:"cancel"
+        
+        
+      },
+      { text: "Yes", onPress: () => console.log("Yes") }
+    ]
+  );
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -38,9 +55,18 @@ const Recent_Search = ({navigation}) => {
           
         </View>
 
+        <View style={styles.cityView}>
+        <Text style={styles.text1}>You recently searched for</Text>
+        <View>
+        <TouchableOpacity onPress={createTwoButtonAlert}>
+        <Text  style={[styles.text1,styles.text2]}>Clear All</Text>
+        </TouchableOpacity>
+        </View>
+       </View>
+
         {/* <NoFav/> */}
        
-       <CityList name="Clear All"/>
+       <CityList/>
       </ImageBackground>
     </View>
   );
@@ -92,9 +118,27 @@ const styles = StyleSheet.create({
     width: 24,
     marginRight:25
   },
-  cityView: {
+
+  cityView:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderWidth: 1,
-  },
+    margin:15,
+    // 
+    marginTop:65,
+    // borderWidth:1
+   
+},
+text1:{
+    color:"#FFFFFF",
+    height:15,
+    fontSize:13,
+    letterSpacing:0,
+    lineHeight:15,
+    // marginTop:20
+    fontWeight:"500"
+
+},
+text2:{
+    fontWeight:"500"
+}
 });
