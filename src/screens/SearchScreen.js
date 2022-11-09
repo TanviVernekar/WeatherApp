@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
     
   },
   backIcon: {
-    // width: 24,
-    // height: 24,
+    width: 24,
+    height: 24,
     marginRight: 34,
   },
 
@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
     width: '70%',
     opacity: 4,
     color: '#000000',
-    // font-family: Roboto,
     fontSize: 15,
     letterSpacing: 0,
 

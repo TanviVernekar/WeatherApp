@@ -16,6 +16,7 @@ import background from '../assets/images/background.png';
 import NoFav from '../components/NoFav';
 import CityList from './CityList';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import cities from '../components/data';
 const Favourite = ({navigation}) => {
 
   const[isEmpty,setEmpty]=useState(false);
@@ -62,21 +63,10 @@ const Favourite = ({navigation}) => {
           </View>
         </View>
 
-
-        {/* <View style={styles.cityView}>
-        <Text style={styles.text1}>6 City added as favourite</Text>
-        <View>
-        <TouchableOpacity onPress={createTwoButtonAlert}>
-        <Text  style={[styles.text1,styles.text2]}>Remove All</Text>
-        </TouchableOpacity>
-        </View>
-       </View> */}
-
-
         {isEmpty?(<NoFav/>):(
         <>
         <View style={styles.cityView}>
-        <Text style={styles.text1}>6 City added as favourite</Text>
+        <Text style={styles.text1}>{cities.length} City added as favourite</Text>
         <View>
         <TouchableOpacity onPress={createTwoButtonAlert}>
         <Text  style={[styles.text1,styles.text2]}>Remove All</Text>
