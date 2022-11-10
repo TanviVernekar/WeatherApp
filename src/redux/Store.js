@@ -3,7 +3,8 @@ import WeatherReducer from './WeatherSlice'
 import WeatherSlice from './WeatherSlice';
 import persistReducer from 'redux-persist/es/persistReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import OperationSlice from './OperationSlice';
+import OperationReducer from './OperationSlice'
 
 
 const persistConfig={
@@ -13,7 +14,9 @@ const persistConfig={
   }
 
   const reducer=combineReducers({
-    favourite:WeatherReducer
+    favourite:WeatherReducer,
+    operationdata:OperationReducer,
+    
   });
 
   const persistRed = persistReducer(persistConfig,reducer);

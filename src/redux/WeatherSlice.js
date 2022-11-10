@@ -4,7 +4,7 @@ import cities from "../components/data";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 // const initialState=cities
 const BASE_URL = 'https://weatherapi-com.p.rapidapi.com/';
-export const getPosts = createAsyncThunk('weatherdata/getData', async () => {
+export const getPosts = createAsyncThunk('weatherdata/getData', async (city) => {
     const options = {
       method: 'GET',
       headers: {
@@ -12,7 +12,7 @@ export const getPosts = createAsyncThunk('weatherdata/getData', async () => {
         'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com',
       },
     };
-    const response = await fetch(BASE_URL + 'current.json?q=Udupi', options)
+    const response = await fetch(BASE_URL + `current.json?q=${city}`, options)
     try {
       const data = response.json();
       console.log("hiiī",data)

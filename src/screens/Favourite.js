@@ -17,8 +17,14 @@ import NoFav from '../components/NoFav';
 import CityList from './CityList';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import cities from '../components/data';
+import { useDispatch } from 'react-redux';
+import { removeAll } from '../redux/OperationSlice';
+
+
 const Favourite = ({navigation}) => {
 
+  const dispatch=useDispatch()
+  const [remove,setRemove] = useState(false);
   const[isEmpty,setEmpty]=useState(false);
   const handlePress = () => {
     navigation.goBack();
@@ -31,10 +37,13 @@ const Favourite = ({navigation}) => {
       {
         text: "No",
         onPress: () =>  setEmpty(false),
-        style:"cancel"
         
+        
+         
       },
-      { text: "Yes", onPress: () => setEmpty(true) }
+      { text: "Yes", onPress: () => {
+      dispatch(removeAll())
+      setEmpty(!isEmpty) }}
     ]
   );
   return (
@@ -73,7 +82,7 @@ const Favourite = ({navigation}) => {
         </TouchableOpacity>
         </View>
        </View>
-       <CityList/>
+       <CityList navigation={navigation}/>
         </>
        )}
        

@@ -1,4 +1,5 @@
-import react, {useState} from 'react';
+// import react, {useState} from 'react';
+import {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,27 +9,68 @@ import {
   TextInput,
   StatusBar,
   Image,
+  Pressable
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { SearchApi } from '../services/SearchApi';
+import { useDispatch,useSelector } from 'react-redux';
+import { getPosts } from '../redux/WeatherSlice';
+import { setFavourite } from '../redux/OperationSlice';
 
+import cities from '../components/data';
+import { FlatList } from 'react-native-gesture-handler';
+import { recentCity } from '../redux/OperationSlice';
 
 const SearchScreen = ({setClicked,clicked}) => {
+  const dispatch=useDispatch()
+  const list = useSelector(state => state.favourite.list);
+  const [celsius, setCelsius] = useState(list.current?.temp_c);
   const handleBack = () => {
     // navigation.goBack();
     setClicked(!clicked)
   };
-
+  
   const [text, setText] = useState(null);
   const [icon, setIcon] = useState();
-  const handleChange = value => {
+
+  const [data,setData] = useState();
+  // const handleBack=()=>{
+  //   setSearch(!search);
+  // }
+
+
+
+  const handleChange = async (value) => {
     setText(value);
     setIcon(require('../assets/images/clearIcon.png'));
+    const Data = await SearchApi(value)
+    setData(Data)
+    console.log("i am data", Data);
   };
 
   const handleClear = () => {
     setText();
   };
+
+
+  const obj = {
+    id: list.location?.name,
+    city: list.location?.name,
+    source: {uri: `https:${list.current?.condition.icon}`},
+    temperature: celsius,
+    description: list.current?.condition.text,
+  };
+
+  const handleSearch = (item) =>{
+    setText(item.name)
+    dispatch(setFavourite(false))
+    // setSearch(!search)
+    setClicked(!clicked)
+    dispatch(recentCity(obj))
+    dispatch(getPosts(item.name))
+  }
+
 
   return (
     <SafeAreaView>
@@ -53,6 +95,7 @@ const SearchScreen = ({setClicked,clicked}) => {
             style={styles.inputText}
             value={text}
             onChangeText={value => handleChange(value)}
+            placeholderTextColor="grey"
           />
           <View style={{marginLeft: 10}}>
             {text ? (
@@ -66,6 +109,20 @@ const SearchScreen = ({setClicked,clicked}) => {
         </View>
       
       <View style={styles.line} />
+      <View >
+          <FlatList
+        data={data}
+        renderItem={({item})=>(
+          (
+            <Pressable onPress={()=>handleSearch(item)}>
+           <View style={styles.header}>
+            <Text>{item.name}</Text>
+            </View>
+            </Pressable>
+          )
+        )}
+          />
+        </View>
     </SafeAreaView>
   );
 };
@@ -80,7 +137,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     // borderWidth: 1,
-    
+    borderBottomColor: 'rgba(105,105,105,0.2)',
+    borderBottomWidth: 1,
   },
   backIcon: {
     width: 24,
