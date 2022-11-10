@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,106 +7,241 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
 
 import background from '../assets/images/background.png';
-const HomeScreen = () => {
+import {getPosts} from '../redux/WeatherSlice';
+
+import moment from 'moment';
+import NoFav from '../components/NoFav';
+import SearchScreen from '../screens/SearchScreen';
+import {addCity, deleteCity} from '../redux/OperationSlice';
+import uuid from 'react-native-uuid';
+import { setFavourite } from '../redux/OperationSlice';
+
+const HomeScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  const list = useSelector(state => state.favourite.list);
+
+  
+  const source = {uri: `https:${list.current?.condition.icon}`};
+  const favourite = useSelector(state=>state.operationdata.favourite)
+  const [favActive,setFavActive]=useState(favourite)
+  // console.log('i am list', list);
+
+
+  const handlepress = () => {
+    navigation.openDrawer();
+  };
+
+  const [date, setDate] = useState('');
+  const currentDateTime = () => {
+    const dateTimeMoment = moment()
+      .utcOffset('+05:30')
+      .format('ddd, DD MMM YY     hh:mm a')
+      .toUpperCase();
+    setDate(dateTimeMoment);
+  };
+
+  useEffect(() => {
+    // dispatch(getPosts());
+    currentDateTime();
+
+    //
+    setCelsius(list.current?.temp_c);
+  }, []);
+  
+
+  const [celsius, setCelsius] = useState(list.current?.temp_c);
+  const handleCelsius = () => {
+    setCelsius(list.current?.temp_c);
+  };
+  const handleFahrenheit = () => {
+    setCelsius(list.current?.temp_f);
+  };
+
+  const [clicked, setClicked] = useState(false);
+ 
+
+  const obj = {
+    id: list.location?.name,
+    city: list.location?.name,
+    region:list.location?.region,
+    source: {uri: `https:${list.current?.condition.icon}`},
+    temperature: celsius,
+    description: list.current?.condition.text,
+  };
+  // console.log('heyyyy', obj);
+  const handleClick = () => {
+    // dispatch(getPosts())
+  //   setFavActive(!favActive);
+  //   // dispatch(setFavourite(true))
+    
+  //   dispatch(addCity(obj));
+  //   favourite ?  
+  //  () dispatch(setFavourite(true))
+  //   dispatch(deleteCity(obj)):dispatch(addCity(obj))
+    // console.log(obj);
+    if (!favourite) {
+      dispatch(setFavourite(true));
+      dispatch(addCity(obj));
+    } else {
+      dispatch(setFavourite(false));
+      dispatch(deleteCity(obj));
+    }
+  };
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={background}
-        resizeMode="cover"
-        style={styles.background}>
-        <SafeAreaView style={{flex: 1}}>
-          <ScrollView>
-            <View style={styles.mainview}>
-              <View style={styles.topview}>
-                <Image
-                  source={require('../assets/images/menuIcon.png')}
-                  style={styles.image}
-                />
-                <Image
-                  source={require('../assets/images/logo2.png')}
-                  style={styles.logo}
-                />
-              </View>
-              <View>
-                <Image
-                  source={require('../assets/images/searchIcon.png')}
-                  style={styles.search}
-                />
-              </View>
-            </View>
-            <View style={styles.middleview}>
-              <Text style={styles.datetime}>WED, 28 NOV 2018 11:35 AM</Text>
-              <Text style={styles.place}>Udupi, Karnataka</Text>
-              <View style={styles.favIconview}>
-                <Image
-                  source={require('../assets/images/favouriteIcon.png')}
-                  style={styles.favouriteIcon}
-                />
-                <Text style={styles.addtofav}> Add to favourite</Text>
-              </View>
-              <View style={styles.sunview}>
+    <>
+      {!clicked ? (
+        <View style={styles.container}>
+          <ImageBackground
+            source={background}
+            resizeMode="cover"
+            style={styles.background}>
+            <SafeAreaView style={{flex: 1}}>
+              <ScrollView>
+                <View style={styles.mainview}>
+                  <View style={styles.topview}>
+                    <Pressable onPress={handlepress}>
+                      <Image
+                        source={require('../assets/images/menuIcon.png')}
+                        style={styles.image}
+                      />
+                    </Pressable>
+                    <Image
+                      source={require('../assets/images/logo2.png')}
+                      style={styles.logo}
+                    />
+                  </View>
+                  <TouchableOpacity onPress={() => setClicked(!clicked)}>
+                    <View>
+                      <Image
+                        source={require('../assets/images/searchIcon.png')}
+                        style={styles.search}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.middleview}>
+                  <Text style={styles.datetime}>{date}</Text>
+                  <Text style={styles.place}>
+                    {list.location?.name},{list.location?.region}
+                  </Text>
+                  <View style={styles.favIconview}>
+                    {favourite?
+                    (
+                    <>
+                      <TouchableOpacity onPress={() => handleClick()}>
+                      <Image
+                        source={require('../assets/images/favactive.png')}
+                        style={styles.favouriteIcon}
+                      />
+                    </TouchableOpacity>
+                    </>)
+                    :(
+                    <>
 
-              <Image
-                source={require('../assets/images/sunIcon.png')}
-                style={styles.sunIcon}
-              />
-              <View style={styles.degree}>
-                <Text style={styles.digit}>31</Text>
-                <View style={styles.unit}>
-                <Text style={styles.unitc}>°C</Text>
-                <Text style={styles.unitf}>°F</Text>
-              </View>
+                      <TouchableOpacity onPress={() => handleClick()}>
+                      <Image
+                        source={require('../assets/images/favouriteIcon.png')}
+                        style={styles.favouriteIcon}
+                      />
+                    </TouchableOpacity>
+                    </>)}
+                   
+                    <Text style={styles.addtofav}>  Add to favourite</Text>
+                  </View>
+                  <View style={styles.sunview}>
+                    <Image
+                      // source={require('../assets/images/sunIcon.png')}
+                      source={{uri: `https:${list.current?.condition.icon}`}}
+                      style={styles.sunIcon}
+                    />
+                    <View style={styles.degree}>
+                      <Text style={styles.digit}>{celsius}</Text>
+                      <View style={styles.unit}>
+                        {celsius == list.current?.temp_c ? (
+                          <>
+                            <TouchableOpacity onPress={handleCelsius}>
+                              <Text style={styles.unitc}>°C</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleFahrenheit}>
+                              <Text style={styles.unitf}>°F</Text>
+                            </TouchableOpacity>
+                            {/* </View> */}
+                          </>
+                        ) : (
+                          <>
+                            {/* <Text style={styles.digit}>{celsius}</Text>
+                  <View style={styles.unit}> */}
+                            <TouchableOpacity onPress={handleCelsius}>
+                              <Text style={styles.unitf}>°C</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleFahrenheit}>
+                              <Text style={styles.unitc}>°F</Text>
+                            </TouchableOpacity>
+                            {/* </View> */}
+                          </>
+                        )}
+                      </View>
+                    </View>
+                    <Text style={styles.text}>
+                     {list.current?.condition.text}
+                    </Text>
+                  </View>
                 </View>
-              <Text style={styles.text}>Mostly Sunny</Text>
-              </View>
-            </View>
-          </ScrollView>
-          <View style={styles.bottomview}>
-            <View style={styles.bottomline} />
-            <ScrollView horizontal>
-              <View style={styles.bottom}>
-              <View style={styles.tempone}>
-                <Image
-                  source={require('../assets/images/temperatureIcon.png')}
-                  style={styles.temperature}
-                />
-                <View style={styles.minmaxview}>
-                  <Text style={styles.minmax}>Min - Max</Text>
-                  <Text style={styles.celsius}>22°-34°</Text>
-                </View>
-              </View>
+              </ScrollView>
+              <View style={styles.bottomview}>
+                <View style={styles.bottomline} />
+                <ScrollView horizontal>
+                  <View style={styles.bottom}>
+                    <View style={styles.tempone}>
+                      <Image
+                        source={require('../assets/images/temperatureIcon.png')}
+                        style={styles.temperature}
+                      />
+                      <View style={styles.minmaxview}>
+                        <Text style={styles.minmax}>Min - Max</Text>
+                        <Text style={styles.celsius}>22°-{celsius}°</Text>
+                      </View>
+                    </View>
 
-              <View style={styles.temptwo}>
-                <Image
-                  source={require('../assets/images/precipitationIcon.png')}
-                  style={styles.precipitationIcon}
-                />
-                <View style={styles.minmaxview}>
-                  <Text style={styles.precipitation}>Precipitation</Text>
-                  <Text style={styles.percentage}>0%</Text>
-                </View>
-              </View>
+                    <View style={styles.temptwo}>
+                      <Image
+                        source={require('../assets/images/precipitationIcon.png')}
+                        style={styles.precipitationIcon}
+                      />
+                      <View style={styles.minmaxview}>
+                        <Text style={styles.precipitation}>Precipitation</Text>
+                        <Text style={styles.percentage}>0%</Text>
+                      </View>
+                    </View>
 
-              <View style={styles.tempone}>
-                <Image
-                  source={require('../assets/images/humidityIcon.png')}
-                  style={styles.humidityIcon}
-                />
-                <View style={styles.minmaxview}>
-                  <Text style={styles.humidity}>Humidity</Text>
-                  <Text style={styles.percentage}>47%</Text>
-                </View>
+                    <View style={styles.tempone}>
+                      <Image
+                        source={require('../assets/images/humidityIcon.png')}
+                        style={styles.humidityIcon}
+                      />
+                      <View style={styles.minmaxview}>
+                        <Text style={styles.humidity}>Humidity</Text>
+                        <Text style={styles.percentage}>{list.current?.humidity}%</Text>
+                      </View>
+                    </View>
+                  </View>
+                </ScrollView>
               </View>
-              </View>
-            </ScrollView>
-          </View>
-        </SafeAreaView>
-      </ImageBackground>
-    </View>
+            </SafeAreaView>
+          </ImageBackground>
+        </View>
+      ) : (
+        <SearchScreen setClicked={setClicked} clicked={clicked} />
+      )}
+    </>
   );
 };
 export default HomeScreen;
@@ -153,6 +288,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     textAlign: 'center',
     margin: 15,
+    fontFamily:"Roboto"
   },
   place: {
     height: 21,
@@ -164,6 +300,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     textAlign: 'center',
     marginBottom: 25,
+    fontFamily:"Roboto"
   },
   favIconview: {
     flexDirection: 'row',
@@ -189,68 +326,72 @@ const styles = StyleSheet.create({
     height: 67,
     width: 64,
   },
-  sunview:{
-    height:175,
-    width:119,
+  sunview: {
+    height: 175,
+    width: 119,
     // borderWidth:1,
-    alignItems:"center",
-    justifyContent:"space-evenly",
-    marginTop:95
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginTop: 95,
   },
-  digit:{
-    height:61,
-    width:60,
-    fontSize:52,
-    fontWeight:'500',
-    letterSpacing:0,
-    lineHeight:61,
-    color:"#FFFFFF"
+  digit: {
+    height: 61,
+    width: 60,
+    fontSize: 52,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 61,
+    color: '#FFFFFF',
+    fontFamily:"Roboto"
   },
-  unit:{
-    height:30,
-    width:55,
-    flexDirection:"row",
-    marginTop:20,
-    borderRadius:5,
-//    alignItems:"center",
-   justifyContent:"center",
-   
-  },
-  unitc:{
-    height:30,
-    width:28,
-    backgroundColor:"#FFFFFF",
-    borderColor:"#FFFFFF",
-    borderRadius:2,
+  unit: {
+    height: 29,
+    width: 55,
+    flexDirection: 'row',
+    marginTop: 20,
+    borderRadius: 2,
     borderWidth:1,
-    color:'#E32843',
-    alignSelf:"center",
-    padding:5
-  
-  },
-  unitf:{
-    height:30,
-    width:28,
     borderColor:"#FFFFFF",
-    borderRadius:2,
-    borderWidth:1,
-    color:'#FFFFFF',
-    padding:5,
-  
+    //    alignItems:"center",
+    justifyContent: 'center',
+    marginLeft: 10,
   },
-  text:{
-    height:21,
-    width:108,
-    color:"#FFFFFF",
-    fontSize:18,
-    letterSpacing:0,
-    lineHeight:21,
-    textAlign:"center"
+  unitc: {
+    // height: 28,
+    // width: 28,
+    backgroundColor: '#FFFFFF',
+    // borderColor: '#FFFFFF',
+    borderRadius: 2,
+    // borderWidth: 1,
+    color: '#E32843',
+    alignSelf: 'center',
+    padding: 5,
+    fontFamily:"Roboto"
+    
+  },
+  unitf: {
+    height: 30,
+    width: 28,
+    // borderColor: '#FFFFFF',
+    borderRadius: 2,
+    // borderWidth: 1,
+    color: '#FFFFFF',
+    padding: 5,
+    fontFamily:"Roboto"
+  },
+  text: {
+    height: 21,
+    fontFamily:"Roboto",
+    color: '#FFFFFF',
+    fontSize: 18,
+    letterSpacing: 0,
+    lineHeight: 21,
+    textAlign: 'center',
   },
   degree: {
     flexDirection: 'row',
-    height:61,
-    width:119
+    height: 61,
+    width: 119,
   },
   bottomline: {
     height: 1,
@@ -269,94 +410,95 @@ const styles = StyleSheet.create({
     // marginLeft:40
     borderColor: 'white',
   },
- 
+
   temperature: {
     height: 26,
     width: 13,
-    marginLeft:5
+    marginLeft: 5,
   },
   tempone: {
     flexDirection: 'row',
     height: 41,
     width: 94,
-    margin:18,
-    marginVertical:25
+    margin: 18,
+    marginVertical: 25,
   },
   temptwo: {
     flexDirection: 'row',
     height: 41,
     width: 113,
-    margin:18,
-    marginVertical:25
+    margin: 18,
+    marginVertical: 25,
   },
   tempthree: {
     flexDirection: 'row',
     height: 40,
     width: 83,
-    margin:18,
-    marginVertical:25
+    margin: 18,
+    marginVertical: 25,
   },
-  minmaxview:{
-    marginLeft:15,
+  minmaxview: {
+    marginLeft: 15,
   },
-  minmax:{
-    height:15,
-    color:"white",
-    fontSize:13,
-    lineHeight:15,
-    letterSpacing:0,
-    marginBottom:3
+  minmax: {
+    height: 15,
+    color: 'white',
+    fontSize: 13,
+    lineHeight: 15,
+    letterSpacing: 0,
+    marginBottom: 3,
+    fontFamily:"Roboto"
   },
-  celsius:{
+  celsius: {
     height: 21,
-//   width: 56,
-  color: '#FFFFFF',
-  fontsize: 18,
-  fontWeight: '500',
-  letterSpacing: 0,
-  lineHeight: 21,
+    //   width: 56,
+    color: '#FFFFFF',
+    fontsize: 18,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 21,
   },
-  bottom:{
-    flexDirection:"row",
-    justifyContent:"space-between"
+  bottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  precipitationIcon:{
-    height:22,
-    width:24,
-    color:"#FFFFFF",
-    marginTop:2,
-    marginLeft:5,
+  precipitationIcon: {
+    height: 22,
+    width: 24,
+    color: '#FFFFFF',
+    marginTop: 2,
+    marginLeft: 5,
   },
-  precipitation:{
-    height:15,
-    marginBottom:5,
-    color:"white",
-    fontSize:13,
-    letterSpacing:0,
-    lineHeight:15
+  precipitation: {
+    height: 15,
+    marginBottom: 5,
+    color: 'white',
+    fontSize: 13,
+    letterSpacing: 0,
+    lineHeight: 15,
+    fontFamily:"Roboto"
   },
-  percentage:{
-    height:21,
-    color:"#FFFFFF",
-    fontSize:18,
-    fontWeight:"500",
-    letterSpacing:0,
-    lineHeight:21
+  percentage: {
+    height: 21,
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 21,
   },
-  humidityIcon:{
-    height:20,
-    width:15,
-    marginLeft:10,
-    marginTop:2
+  humidityIcon: {
+    height: 20,
+    width: 15,
+    marginLeft: 10,
+    marginTop: 2,
   },
-  humidity:{
-    height:15,
-   
-    color:"#FFFFFF",
-    fontSize:13,
-    letterSpacing:0,
-    lineHeight:15,
-    marginBottom:5
-
-  }
+  humidity: {
+    height: 15,
+    fontFamily:"Roboto",
+    color: '#FFFFFF',
+    fontSize: 13,
+    letterSpacing: 0,
+    lineHeight: 15,
+    marginBottom: 5,
+  },
 });
