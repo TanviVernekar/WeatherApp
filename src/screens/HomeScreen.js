@@ -71,6 +71,7 @@ const HomeScreen = ({navigation}) => {
   const obj = {
     id: list.location?.name,
     city: list.location?.name,
+    region:list.location?.region,
     source: {uri: `https:${list.current?.condition.icon}`},
     temperature: celsius,
     description: list.current?.condition.text,
@@ -153,7 +154,7 @@ const HomeScreen = ({navigation}) => {
                     </TouchableOpacity>
                     </>)}
                    
-                    <Text style={styles.addtofav}> Add to favourite</Text>
+                    <Text style={styles.addtofav}>  Add to favourite</Text>
                   </View>
                   <View style={styles.sunview}>
                     <Image
@@ -206,7 +207,7 @@ const HomeScreen = ({navigation}) => {
                       />
                       <View style={styles.minmaxview}>
                         <Text style={styles.minmax}>Min - Max</Text>
-                        <Text style={styles.celsius}>22°-34°</Text>
+                        <Text style={styles.celsius}>22°-{celsius}°</Text>
                       </View>
                     </View>
 
@@ -287,6 +288,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     textAlign: 'center',
     margin: 15,
+    fontFamily:"Roboto"
   },
   place: {
     height: 21,
@@ -298,6 +300,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     textAlign: 'center',
     marginBottom: 25,
+    fontFamily:"Roboto"
   },
   favIconview: {
     flexDirection: 'row',
@@ -339,6 +342,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
     lineHeight: 61,
     color: '#FFFFFF',
+    fontFamily:"Roboto"
   },
   unit: {
     height: 29,
@@ -362,6 +366,7 @@ const styles = StyleSheet.create({
     color: '#E32843',
     alignSelf: 'center',
     padding: 5,
+    fontFamily:"Roboto"
     
   },
   unitf: {
@@ -372,10 +377,11 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     color: '#FFFFFF',
     padding: 5,
+    fontFamily:"Roboto"
   },
   text: {
     height: 21,
-   
+    fontFamily:"Roboto",
     color: '#FFFFFF',
     fontSize: 18,
     letterSpacing: 0,
@@ -441,6 +447,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     letterSpacing: 0,
     marginBottom: 3,
+    fontFamily:"Roboto"
   },
   celsius: {
     height: 21,
@@ -469,6 +476,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     letterSpacing: 0,
     lineHeight: 15,
+    fontFamily:"Roboto"
   },
   percentage: {
     height: 21,
@@ -486,7 +494,7 @@ const styles = StyleSheet.create({
   },
   humidity: {
     height: 15,
-
+    fontFamily:"Roboto",
     color: '#FFFFFF',
     fontSize: 13,
     letterSpacing: 0,

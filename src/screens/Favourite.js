@@ -17,7 +17,7 @@ import NoFav from '../components/NoFav';
 import CityList from './CityList';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import cities from '../components/data';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removeAll } from '../redux/OperationSlice';
 
 
@@ -26,6 +26,7 @@ const Favourite = ({navigation}) => {
   const dispatch=useDispatch()
   const [remove,setRemove] = useState(false);
   const[isEmpty,setEmpty]=useState(false);
+  const count=useSelector(state=>state.operationdata.value)
   const handlePress = () => {
     navigation.goBack();
   };
@@ -75,7 +76,7 @@ const Favourite = ({navigation}) => {
         {isEmpty?(<NoFav/>):(
         <>
         <View style={styles.cityView}>
-        <Text style={styles.text1}>{cities.length} City added as favourite</Text>
+        <Text style={styles.text1}>{count.length} City added as favourite</Text>
         <View>
         <TouchableOpacity onPress={createTwoButtonAlert}>
         <Text  style={[styles.text1,styles.text2]}>Remove All</Text>
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
     lineHeight: 24,
     marginLeft: 50,
+    fontFamily:"Roboto"
   },
   searchIcon: {
     // margin:15,
@@ -154,10 +156,12 @@ text1:{
     letterSpacing:0,
     lineHeight:15,
     // marginTop:20
+    fontFamily:"Roboto"
 
 },
 text2:{
-    fontWeight:"500"
+    fontWeight:"500",
+    fontFamily:"Roboto"
     
 },
 });

@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
     lineHeight: 24,
     marginLeft: 50,
+    fontFamily:"Roboto"
   },
   searchIcon: {
     // margin:15,
@@ -149,8 +150,10 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     // marginTop:20
     fontWeight: '500',
+    fontFamily:"Roboto"
   },
   text2: {
     fontWeight: '500',
+    fontFamily:"Roboto"
   },
 });

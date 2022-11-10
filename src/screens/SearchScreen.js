@@ -57,6 +57,7 @@ const SearchScreen = ({setClicked,clicked}) => {
   const obj = {
     id: list.location?.name,
     city: list.location?.name,
+    region:list.location?.region,
     source: {uri: `https:${list.current?.condition.icon}`},
     temperature: celsius,
     description: list.current?.condition.text,

@@ -42,7 +42,7 @@ const RecentList = ({navigation}) => {
               <View>
                 <View>
                   <Text style={styles.cityname}>
-                    {item.city}
+                    {item.city},{item.region}
                   </Text>
                 </View>
                 <View style={styles.imageview}>
