@@ -14,12 +14,15 @@ import NoFav from '../components/NoFav';
 import CityList from './CityList';
 import RecentList from '../components/RecentList';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {clearAll} from '../redux/OperationSlice';
-import {useDispatch} from 'react-redux';
+import {clearAll, setFavourite} from '../redux/OperationSlice';
+import {useDispatch,useSelector} from 'react-redux';
+import NoRecent from '../components/NoRecent';
 
 const Recent_Search = ({navigation}) => {
   const dispatch = useDispatch();
   const [isEmpty, setEmpty] = useState(false);
+  
+  const noRecent=useSelector(state=>state.operationdata.removeRecent)
   const handlePress = () => {
     navigation.goBack();
   };
@@ -35,8 +38,10 @@ const Recent_Search = ({navigation}) => {
       {
         text: 'Yes',
         onPress: () => {
-          dispatch(clearAll()), setEmpty(!isEmpty);
-        },
+          dispatch(clearAll()), 
+          dispatch(setFavourite(false)),
+          setEmpty(!isEmpty)
+        }
       },
     ]);
   return (
@@ -67,7 +72,7 @@ const Recent_Search = ({navigation}) => {
             <Icon name="search" size={25} style={styles.searchIcon} />
           </View>
         </View>
-        {isEmpty ? (
+        {noRecent ? (
           <NoFav/>
         ) : (
           <>
@@ -79,10 +84,10 @@ const Recent_Search = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
+            <RecentList navigation={navigation} />
           </>
         )}
 
-      <RecentList navigation={navigation} />
       </ImageBackground>
     </View>
   );

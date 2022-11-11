@@ -42,14 +42,14 @@ const RecentList = ({navigation}) => {
               <View>
                 <View>
                   <Text style={styles.cityname}>
-                    {item.city},{item.region}
+                    {item.city}, {item.region}
                   </Text>
                 </View>
                 <View style={styles.imageview}>
                   <Image source={item.source} style={styles.image} />
                   <Text style={styles.imagetext1}> {item.temperature}</Text>
-                  <Text style={styles.imagetext2}> </Text>
-                  <Text style={styles.imagetext3}> {item.description}</Text>
+                  <Text style={styles.imagetext2}>°C</Text>
+                  <Text style={styles.imagetext3}>      {item.description}</Text>
                 </View>
               </View>
               <View>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   cityname: {
     height: 18,
-    // width:116,
+    fontFamily:"Roboto",
     color: '#FFE539',
     fontSize: 15,
     fontWeight: '500',
@@ -100,34 +100,34 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   image: {
-    width: 24,
+    width: 34,
     height: 20,
   },
   imageview: {
     height: 23,
     width: 167,
     flexDirection: 'row',
-    marginLeft: 15,
+    marginLeft: 8,
   },
   imagetext1: {
     height: 21,
-    // width: 21,
+    fontFamily:"Roboto",
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '500',
     letterSpacing: 0,
     lineHeight: 21,
-    marginStart: 5,
+    marginStart: 2,
   },
   imagetext2: {
     height: 21,
-    // width:13,
+    fontFamily:"Roboto",
     color: '#FFFFFF',
     marginTop: 3,
   },
   imagetext3: {
     height: 16,
-    //   width: 84,
+    fontFamily:"Roboto",
     color: '#FFFFFF',
     fontSize: 14,
     letterSpacing: 0,

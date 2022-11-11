@@ -11,7 +11,7 @@ const Drawer = createDrawerNavigator();
 export default function DrawerNav() {
     return (
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Router">
+        <Drawer.Navigator initialRouteName="Router" screenOptions={{drawerStyle:{backgroundColor:"white"},drawerActiveTintColor:"black",drawerInactiveTintColor:"grey",drawerActiveBackgroundColor:"transparent"}}>
           <Drawer.Screen name="Home" component={Router} options={{headerShown:false}}/>
           <Drawer.Screen name="Favourite" component={Favourite} options={{headerShown:false}}/>
           <Drawer.Screen name="Recent Search" component={Recent_Search} options={{headerShown:false}}/>

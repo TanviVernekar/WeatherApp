@@ -43,7 +43,7 @@ const HomeScreen = ({navigation}) => {
   const currentDateTime = () => {
     const dateTimeMoment = moment()
       .utcOffset('+05:30')
-      .format('ddd, DD MMM YY     hh:mm a')
+      .format('ddd, DD MMM YYYY     hh:mm a')
       .toUpperCase();
     setDate(dateTimeMoment);
   };
@@ -51,8 +51,6 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     // dispatch(getPosts());
     currentDateTime();
-
-    //
     setCelsius(list.current?.temp_c);
   }, []);
   
@@ -78,15 +76,7 @@ const HomeScreen = ({navigation}) => {
   };
   // console.log('heyyyy', obj);
   const handleClick = () => {
-    // dispatch(getPosts())
-  //   setFavActive(!favActive);
-  //   // dispatch(setFavourite(true))
-    
-  //   dispatch(addCity(obj));
-  //   favourite ?  
-  //  () dispatch(setFavourite(true))
-  //   dispatch(deleteCity(obj)):dispatch(addCity(obj))
-    // console.log(obj);
+ 
     if (!favourite) {
       dispatch(setFavourite(true));
       dispatch(addCity(obj));
@@ -130,7 +120,7 @@ const HomeScreen = ({navigation}) => {
                 <View style={styles.middleview}>
                   <Text style={styles.datetime}>{date}</Text>
                   <Text style={styles.place}>
-                    {list.location?.name},{list.location?.region}
+                    {list.location?.name}, {list.location?.region}
                   </Text>
                   <View style={styles.favIconview}>
                     {favourite?
@@ -323,13 +313,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   sunIcon: {
-    height: 67,
-    width: 64,
+    height: 75,
+    width: 70,
   },
   sunview: {
     height: 175,
-    width: 119,
-    // borderWidth:1,
     alignItems: 'center',
     justifyContent: 'space-evenly',
     marginTop: 95,

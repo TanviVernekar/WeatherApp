@@ -7,11 +7,12 @@ export const OperationSlice = createSlice({
       value:[],
       favourite:false,
       recent:[],
+      removeFavourite:false,
     },
     reducers:{
       addCity: (state, action) => {
         const val=state.value.map(value=>value.id);
-        if(val.includes(action.payload.id)&& action.payload.id!=''){
+        if(val.includes(action.payload.id)){
           alert("already exists")
         }
         else{
@@ -38,11 +39,17 @@ export const OperationSlice = createSlice({
           },
           clearAll:(state,action)=>{
             state.recent=[]
-          }
+          },
+          setremoveFavourite:(state,action)=>{
+            state.removeFavourite = action.payload
+          },
+          setremoveRecent:(state,action)=>{
+            state.removeRecent = action.payload
+          },
     },
 
   });
   
-  export const {addCity,deleteCity,setFavourite,recentCity,deleteRecentCity,removeAll,clearAll} = OperationSlice.actions;
+  export const {addCity,deleteCity,setFavourite,recentCity,deleteRecentCity,removeAll,clearAll,setremoveFavourite,setremoveRecent} = OperationSlice.actions;
   
   export default OperationSlice.reducer;

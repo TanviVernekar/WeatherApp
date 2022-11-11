@@ -18,7 +18,8 @@ import CityList from './CityList';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import cities from '../components/data';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeAll } from '../redux/OperationSlice';
+import { removeAll, setFavourite } from '../redux/OperationSlice';
+import { setremoveFavourite } from '../redux/OperationSlice';
 
 
 const Favourite = ({navigation}) => {
@@ -27,6 +28,7 @@ const Favourite = ({navigation}) => {
   const [remove,setRemove] = useState(false);
   const[isEmpty,setEmpty]=useState(false);
   const count=useSelector(state=>state.operationdata.value)
+  const nofavourite=useSelector(state=>state.operationdata.removeFavourite)
   const handlePress = () => {
     navigation.goBack();
   };
@@ -43,8 +45,9 @@ const Favourite = ({navigation}) => {
          
       },
       { text: "Yes", onPress: () => {
-      dispatch(removeAll())
-      setEmpty(!isEmpty) }}
+      dispatch(removeAll()),
+      dispatch(setFavourite(false)),
+      dispatch(setremoveFavourite(true))}}
     ]
   );
   return (
@@ -73,7 +76,7 @@ const Favourite = ({navigation}) => {
           </View>
         </View>
 
-        {isEmpty?(<NoFav/>):(
+        {nofavourite?(<NoFav/>):(
         <>
         <View style={styles.cityView}>
         <Text style={styles.text1}>{count.length} City added as favourite</Text>
